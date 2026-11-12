@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini AI Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header class="app-header">
+      <h1>Mini AI Chat</h1>
+      <span class="model-info">Model: openrouter/free</span>
+    </header>
+
+    <!-- API Key Section -->
+    <section class="card">
+      <form id="key-form">
+        <label for="api-key">OpenRouter API key</label>
+        <div class="key-controls">
+          <input type="password" id="api-key" placeholder="sk-or-..." required>
+          <button type="submit" id="save-key">Save</button>
+          <button type="button" id="forget-key">Forget key</button>
+        </div>
+        <small id="key-status">Key saved in this browser. Messages are sent to OpenRouter.</small>
+      </form>
+    </section>
+
+    <!-- Conversation Area -->
+    <section class="card">
+      <h2>Conversation</h2>
+      <div id="conversation" aria-live="polite">
+        <!-- Messages will be injected here -->
+      </div>
+      <p id="status" role="status">Status: Ready</p>
+    </section>
+
+    <!-- Question Input Form -->
+    <section class="card">
+      <form id="chat-form">
+        <label for="question">Your question</label>
+        <textarea id="question" rows="3" placeholder="Type a question..." required></textarea>
+        <button type="submit" id="send-btn">Send</button>
+      </form>
+      <small class="disclaimer">Questions and content are sent to OpenRouter and its model provider. Use non-sensitive test data.</small>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
