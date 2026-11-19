@@ -3,48 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini AI Chat</title>
+  <title>Calibur AI</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 64'%3E%3Cpolygon points='16,2 11.5,38 20.5,38' fill='%234de1ff'/%3E%3Cpolygon points='6,38 26,38 24,42 8,42' fill='%23c9d3e0'/%3E%3Crect x='14.5' y='42' width='3' height='12' fill='%23c9d3e0'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <header class="app-header">
-      <h1>Mini AI Chat</h1>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="bladeL" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f2fbff"/><stop offset="1" stop-color="#4de1ff"/>
+      </linearGradient>
+      <linearGradient id="bladeR" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#9fb4c9"/><stop offset="1" stop-color="#1f6fd1"/>
+      </linearGradient>
+      <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f4f7fb"/><stop offset="1" stop-color="#7d8da1"/>
+      </linearGradient>
+      <symbol id="sword" viewBox="0 0 32 64">
+        <polygon points="16,2 11.5,38 16,38" fill="url(#bladeL)"/>
+        <polygon points="16,2 16,38 20.5,38" fill="url(#bladeR)"/>
+        <polygon points="6,38 26,38 24,42 8,42" fill="url(#steel)"/>
+        <rect x="14.5" y="42" width="3" height="12" fill="url(#steel)"/>
+        <polygon points="16,54 19.5,57.5 16,61 12.5,57.5" fill="url(#bladeL)"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <nav class="rail" aria-label="Main">
+    <svg class="logo" width="22" height="44" aria-hidden="true"><use href="#sword"/></svg>
+    <button type="button" id="new-chat" class="icon-btn" aria-label="New Chat" title="New Chat">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>
+    </button>
+    <button type="button" id="open-settings" class="icon-btn push" aria-label="API key settings" title="API key settings">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
+    </button>
+  </nav>
+
+  <main class="stage is-empty" id="stage">
+    <header class="topbar">
+      <h1>Calibur AI</h1>
       <span class="model-info">Model: openrouter/free</span>
     </header>
 
-    <!-- API Key Section -->
-    <section class="card">
-      <form id="key-form">
-        <label for="api-key">OpenRouter API key</label>
-        <div class="key-controls">
-          <input type="password" id="api-key" placeholder="sk-or-..." required>
-          <button type="submit" id="save-key">Save</button>
-          <button type="button" id="forget-key">Forget key</button>
-        </div>
-        <small id="key-status">Key saved in this browser. Messages are sent to OpenRouter.</small>
-      </form>
-    </section>
-
-    <!-- Conversation Area -->
-    <section class="card">
-      <h2>Conversation</h2>
-      <div id="conversation" aria-live="polite">
-        <!-- Messages will be injected here -->
+    <section id="conversation" aria-live="polite" aria-label="Conversation">
+      <div class="empty">
+        <svg class="hero-sword" aria-hidden="true"><use href="#sword"/></svg>
+        <p class="greeting">Ask anything. Cut to the answer.</p>
       </div>
-      <p id="status" role="status">Status: Ready</p>
     </section>
 
-    <!-- Question Input Form -->
-    <section class="card">
-      <form id="chat-form">
-        <label for="question">Your question</label>
-        <textarea id="question" rows="3" placeholder="Type a question..." required></textarea>
-        <button type="submit" id="send-btn">Send</button>
+    <div class="dock">
+      <p id="status" role="status">Status: Ready</p>
+      <p id="error" class="error" role="alert"></p>
+
+      <form id="chat-form" novalidate>
+        <label for="question" class="q-label">Your question</label>
+        <div id="file-chip" class="file-chip" hidden>
+          <span id="file-name"></span>
+          <button type="button" id="remove-file" class="link-btn" aria-label="Remove attached file">Remove</button>
+        </div>
+        <div class="composer">
+          <button type="button" id="attach-btn" class="icon-btn" aria-label="Attach .txt file" title="Attach .txt file (30 KB max)">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <input type="file" id="file-input" accept=".txt,text/plain" hidden>
+          <textarea id="question" rows="1" placeholder="Ask Calibur AI..."></textarea>
+          <button type="submit" id="send-btn" class="send-btn" aria-label="Send" title="Send">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            <span class="sr-only">Send</span>
+          </button>
+        </div>
       </form>
-      <small class="disclaimer">Questions and content are sent to OpenRouter and its model provider. Use non-sensitive test data.</small>
-    </section>
+
+      <div class="chips">
+        <button type="button" class="chip">Explain what an API is in simple words</button>
+        <button type="button" class="chip">Give me 3 tips for studying JavaScript</button>
+        <button type="button" class="chip">Write a short poem about the ocean</button>
+      </div>
+
+      <p class="disclaimer">Enter to send, Shift+Enter for a new line. Your questions and any attached file content are sent to OpenRouter and its model provider. Use non-sensitive test data only.</p>
+    </div>
   </main>
+
+  <dialog id="settings" aria-labelledby="settings-title">
+    <form id="key-form" novalidate>
+      <h2 id="settings-title">API key settings</h2>
+      <label for="api-key">OpenRouter API key</label>
+      <input type="password" id="api-key" placeholder="sk-or-..." autocomplete="off">
+      <div class="dialog-actions">
+        <button type="submit" id="save-key">Save</button>
+        <button type="button" id="forget-key" class="secondary">Forget key</button>
+        <button type="button" id="close-settings" class="secondary">Close</button>
+      </div>
+      <small id="key-status" role="status">No key saved.</small>
+      <small class="note">Your key is stored only in this browser (localStorage) and sent only to OpenRouter.</small>
+    </form>
+  </dialog>
 
   <script src="script.js" defer></script>
 </body>
