@@ -18,18 +18,18 @@ A small responsive chat app built with vanilla HTML, CSS, and JavaScript. It sen
 - `openrouter_api_key`: the visitor's API key. It is shown masked in the input. Forget key removes it from localStorage and clears the value held in memory.
 - `calibur_history`: the saved conversation as JSON (messages only, never the API key). It is restored on refresh and cleared by New Chat.
 
-The key is not in the GitHub repo because the visitor types it in the browser. It is still readable by any JavaScript running on the page, since it lives in localStorage.
+The key is not in the GitHub repo because each visitor types it into the browser. It is still readable by any JavaScript running on the page, since it lives in localStorage.
 
 ## Core features
 - Labelled password input with Save and Forget key buttons
-- Blank questions are rejected and a key is required before sending
+- Blank questions are rejected, and a key is required before sending
 - Request to OpenRouter with `fetch`, `async`/`await`, and `stream: false`
-- "Thinking..." message while waiting, and Send is disabled to prevent duplicate requests
+- "Thinking..." message while waiting, with Send disabled to prevent duplicate requests
 - Clear errors for an invalid key (401), no credits (402), rate limit (429), service unavailable (5xx), and network failure; controls are restored in `finally` so the visitor can try again
 - User questions and assistant answers are styled differently
-- Responsive layout for phone and desktop, visible labels, real buttons, and keyboard focus styles
+- Responsive layout, visible labels, real buttons, and keyboard focus styles
 - A notice before the first request says that questions and attached content are sent to OpenRouter and its model provider
-- "Connected" is never shown just because a key was saved; the key status only says the last request succeeded after a real API response
+- The key status never says "connected" just because a key was saved; it only reports success after a real API response
 
 ## Completed bonuses
 - **New Chat (+2):** clears the display, the saved history, and the conversation context. The API key is kept.
@@ -42,25 +42,22 @@ Custom sword logo and favicon (SVG), settings dialog for the API key, suggestion
 ## Known limitations
 - Only the most recent 10 messages are sent as context.
 - Only one saved conversation is kept.
-- Free models can be slow, rate limited, or unavailable.
+- Free models can be slow, rate limited, or unavailable, and their answers are not always accurate.
 - Only plain `.txt` attachments are supported (no images or PDFs).
-- The key is stored in localStorage, so it is visible to any script running on the page.
+- The key is stored in localStorage, so it is visible to any script running on the page. I set a $1 credit limit on my OpenRouter key to reduce the risk.
 
 ## Checks performed
-- Real question and answer
+- Real question and answer on the deployed site
 - Follow-up question (memory)
 - Blank question
 - Missing key
 - Invalid key
+- Key persistence and chat history restore after refresh
+- New Chat
+- File upload: valid `.txt` (the model answered about its contents) and wrong file type
 - Offline mode
 - Repeated Send clicks
-- Key persistence after refresh
-- Forget key
-- New Chat
-- History restore after refresh
-- File upload: valid `.txt`, wrong file type, and oversized file
-- Phone and desktop layouts
-- Live Netlify site in a fresh incognito window
+- Desktop and phone layouts
 
 ## AI usage statement
-I used Claude (Anthropic) to help refine the HTML, CSS, and JavaScript, including the interface design and error handling. I reviewed the code, tested every feature in the browser and on the deployed site, and made changes myself so that I understand how it works.
+I used Claude (Anthropic) to help generate and refine the HTML, CSS, and JavaScript, including the interface and error handling. I chose the name Calibur AI and the sword-blade branding, renamed and deployed the site on Netlify, and tested each feature in the browser and on the deployed site to make sure it works and that I understand how it works.
